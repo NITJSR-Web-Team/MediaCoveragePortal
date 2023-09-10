@@ -1,7 +1,7 @@
 import axiosOriginal from "axios";
 
 const axios = axiosOriginal.create({
-  baseURL: "http://localhost:3030"
+  baseURL: "https://nitjsr.ac.in/backend",
 });
 
-export default axios
+export default axios;

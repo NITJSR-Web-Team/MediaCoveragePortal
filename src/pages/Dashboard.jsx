@@ -7,8 +7,13 @@ import Form from "../components/Form";
 import DeleteConfirmationDialog from "../components/DeleteConfirmationDialog";
 
 function MediaCard(props) {
-  const { title, description, published_date, source_link, id, onEdit } = props;
-
+  const { title, description, published_date, source_link, links, id, onEdit } =
+    props;
+  let arr = [];
+  if (links) {
+    console.log(links);
+    arr = links.split(",");
+  }
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const handleDelete = async () => {
@@ -36,6 +41,20 @@ function MediaCard(props) {
     <Card className="p-6">
       <h2 className="text-xl font-bold mb-4">{title}</h2>
       <p>{description}</p>
+      {arr.length > 0 && (
+        <Box className="flex flex-wrap gap-2 mt-4">
+          {arr.map((image) => (
+            <Box className="w-[200px] h-[200px] overflow-hidden">
+              <img
+                src={"https://nitjsr.ac.in/backend/" + image}
+                alt=""
+                className="w-full h-full object-cover"
+              />
+            </Box>
+          ))}
+        </Box>
+      )}
+
       <Box className="mt-4 flex gap-3">
         <Button
           color="blue"
@@ -67,6 +86,7 @@ function MediaCard(props) {
 
 export default function Dashboard() {
   const [data, setData] = useState();
+  const [images, setImages] = useState([]);
   const [mode, setMode] = useState("unknown");
 
   const [selectedMedia, setSelectedMedia] = useState(null);
@@ -75,6 +95,8 @@ export default function Dashboard() {
     axios.post("/media-coverage/fetch").then((res) => {
       if (res.status >= 200 && res.status < 300) {
         setData(res.data);
+        setImages(res.data.links);
+        console.log(res.data);
       }
     });
   }, []);
